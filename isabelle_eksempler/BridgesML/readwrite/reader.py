@@ -2,7 +2,7 @@ import io
 import json
 import numpy as np
 
-def readTweetsOfficial(tweetfile, encoding='windows-1252', tweetcolumn=2, topic="all"):
+def readTweetsOfficial(tweetfile, encoding='utf-8', tweetcolumn=2, topic="all"):
     """
     Read tweets from official files
     :param topic: which topic to use, if topic="all", data for all topics is read

@@ -2,11 +2,8 @@
 
 __author__ = 'Isabelle Augenstein'
 
-import sys
-sys.path.append("/Users/thomas/Skole/Dropbox/SKOLE/bachelorprojekt/isabelle eksempler/BridgesML")
-
-from readwrite.reader import *
-from readwrite.writer import *
+from isabelle_eksempler.BridgesML.readwrite.reader import *
+from isabelle_eksempler.BridgesML.readwrite.writer import *
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -45,7 +42,7 @@ def predict(model, features_test):
 
 
 if __name__ == '__main__':
-    fp = "/Users/thomas/Skole/Dropbox/SKOLE/bachelorprojekt/isabelle eksempler/BridgesML/data/semeval/"
+    fp = "/data/semeval/"
     train_path = fp + "semeval2016-task6-train+dev.txt"
     test_path = fp + "SemEval2016-Task6-subtaskB-testdata-gold.txt"
     pred_path = fp + "SemEval2016-Task6-subtaskB-testdata-pred.txt"

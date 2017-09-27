@@ -1,8 +1,8 @@
 import sys
-sys.path.append("/Users/thomas/Skole/Dropbox/SKOLE/bachelorprojekt/isabelle eksempler/")
+sys.path.append("../")
 
-from BridgesML.readwrite.reader import *
-from BridgesML.ex2_scikit import *
+from isabelle_eksempler.BridgesML.readwrite.reader import *
+from isabelle_eksempler.BridgesML.ex2_scikit import *
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -23,9 +23,14 @@ def featTransform(train_tweets, test_tweets):
     #print(features_train)
     return train_features, test_features, cv.vocabulary
 
+def model_train(feats_train, labels):
+    # s(f(x), g(x)) + loss function handled by this model
+    model = LogisticRegression(penalty='l2')
+    model.fit(feats_train, labels)
+    return model
 
 if __name__ == '__main__':
-    fp = "/Users/thomas/Skole/Dropbox/SKOLE/bachelorprojekt/kode/data17/"
+    fp = "../testkode/data17/"
     train = fp + "train/anger-ratings-0to1.train.txt"
     test = fp + "test/anger-ratings-0to1.test.target.txt"
 
@@ -34,5 +39,4 @@ if __name__ == '__main__':
     #print(train_tweets)
 
     train_features, train_labels, test_features, test_labels = extractFeatures(train, test)
-    #print(train_features)
-    #print(train_labels)
+    model_train(train_features, train_labels)
