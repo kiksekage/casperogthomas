@@ -34,11 +34,6 @@ def printPredsToFile(infile, outfile, res, infileenc="utf-8", skip=0):
 
     outf.close()
 
-
-
-
-
-
 def printPredsToFileByID(infile, outfile, ids, res, infileenc='utf-8'):
     """
     Print predictions to file in SemEval format so the official eval script can be applied
