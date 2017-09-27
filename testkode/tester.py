@@ -4,29 +4,42 @@ sys.path.append("../")
 from reader import *
 from writer import *
 #from isabelle_eksempler.BridgesML.ex2_scikit import *
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.neighbors import NearestCentroid
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 def extractFeatures(train, test):
-    test_emotion, test_tweets, test_labels, test_ids = readTweetsOfficial(test)
-    train_emotion, train_tweets, train_labels, train_ids = readTweetsOfficial(train)
+    test_tweets_list = []
+    train_tweets_list = []
 
-    train_features, test_features, vocab = featTransform(train_tweets, test_tweets)
+    test_labels_list =[]
+    train_labels_list =[]
 
-    return train_features, train_labels, test_features, test_labels
+    for file in test:
+        test_emotion, test_tweets, test_labels, test_ids = readTweetsOfficial(file)
+        test_tweets_list.extend(test_tweets)
+        test_labels_list.extend(test_emotion)
+    
+    for file in train:
+        train_emotion, train_tweets, train_labels, train_ids = readTweetsOfficial(file)
+        train_tweets_list.extend(train_tweets)
+        train_labels_list.extend(train_emotion)
+
+    train_features, test_features, vocab = featTransform(train_tweets_list, test_tweets_list)
+
+    return train_features, train_labels_list, test_features, test_labels_list
 
 def featTransform(train_tweets, test_tweets):
-    cv = CountVectorizer(max_features=100, stop_words='english') #max_features=100, ngram_range=(1, 4), stop_words='english'
-    cv.fit(train_tweets)
-    #print(cv.vocabulary_) #lige kommenteret printet ud
-    train_features = cv.transform(train_tweets)
-    test_features = cv.transform(test_tweets)
+    TfidfV = TfidfVectorizer(train_tweets, max_features=1000, stop_words='english') #max_features=100, ngram_range=(1, 4), stop_words='english'
+    TfidfV.fit(train_tweets)
+    #print(TfidfV.vocabulary_)
+    train_features = TfidfV.transform(train_tweets)
+    test_features = TfidfV.transform(test_tweets)
     #print(features_train)
-    return train_features, test_features, cv.vocabulary
+    return train_features, test_features, TfidfV.vocabulary
 
 def model_train(feats_train, labels):
     # s(f(x), g(x)) + loss function handled by this model
-    model = LogisticRegression(penalty='l2')
+    model = NearestCentroid()
     model.fit(feats_train, labels)
     return model
 
@@ -39,18 +52,26 @@ def predict(model, features_test):
 
 if __name__ == '__main__':
     fp = "../testkode/data17/"
-    train = fp + "train/anger-ratings-0to1.train.txt"
-    test = fp + "test/anger-ratings-0to1.test.target.txt"
+    train = [fp + "train/anger-ratings-0to1.train.txt", fp + "train/fear-ratings-0to1.train.txt", fp + "train/joy-ratings-0to1.train.txt", fp + "train/sadness-ratings-0to1.train.txt"]
+    test = [fp + "test/anger-ratings-0to1.test.target.txt", fp + "test/fear-ratings-0to1.test.target.txt", fp + "test/joy-ratings-0to1.test.target.txt", fp + "test/sadness-ratings-0to1.test.target.txt"]
     pred = fp + "test/preds.txt"
 
-    #train_emotion, train_tweets, train_labels, train_ids = readTweetsOfficial(test)
-
-    #print(train_tweets)
-
     train_features, train_labels, test_features, test_labels = extractFeatures(train, test)
+    #print(train_features[15])
+    #print(train_labels[15])
+
     model = model_train(train_features, train_labels)
     predictions = predict(model, test_features)
-    #print(predictions)
+    
+    print(predictions)
 
-    printPredsToFile(test, pred, predictions)
-    eval(test, pred)
+    count = 0
+    for i, pred in enumerate(predictions):
+        if test_labels[i] == pred:
+            count += 1
+    
+    print(count)
+    #print(train_labels)
+
+    #printPredsToFile(test, pred, predictions)
+    #eval(test, pred)
