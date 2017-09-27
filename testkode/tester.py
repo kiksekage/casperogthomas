@@ -3,6 +3,7 @@ sys.path.append("../")
 
 from reader import *
 from writer import *
+from eval import *
 #from isabelle_eksempler.BridgesML.ex2_scikit import *
 from sklearn.neighbors import NearestCentroid
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -15,12 +16,12 @@ def extractFeatures(train, test):
     train_labels_list =[]
 
     for file in test:
-        test_emotion, test_tweets, test_labels, test_ids = readTweetsOfficial(file)
+        test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(file)
         test_tweets_list.extend(test_tweets)
         test_labels_list.extend(test_emotion)
     
     for file in train:
-        train_emotion, train_tweets, train_labels, train_ids = readTweetsOfficial(file)
+        train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(file)
         train_tweets_list.extend(train_tweets)
         train_labels_list.extend(train_emotion)
 
@@ -54,24 +55,16 @@ if __name__ == '__main__':
     fp = "../testkode/data17/"
     train = [fp + "train/anger-ratings-0to1.train.txt", fp + "train/fear-ratings-0to1.train.txt", fp + "train/joy-ratings-0to1.train.txt", fp + "train/sadness-ratings-0to1.train.txt"]
     test = [fp + "test/anger-ratings-0to1.test.target.txt", fp + "test/fear-ratings-0to1.test.target.txt", fp + "test/joy-ratings-0to1.test.target.txt", fp + "test/sadness-ratings-0to1.test.target.txt"]
-    pred = fp + "test/preds.txt"
+    dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt", fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
+    pred = fp + "preds.txt"
 
-    train_features, train_labels, test_features, test_labels = extractFeatures(train, test)
-    #print(train_features[15])
-    #print(train_labels[15])
+    train_features, train_labels, test_features, test_labels = extractFeatures(train, test) #ændr test til dev
 
     model = model_train(train_features, train_labels)
     predictions = predict(model, test_features)
     
-    print(predictions)
-
-    count = 0
-    for i, pred in enumerate(predictions):
-        if test_labels[i] == pred:
-            count += 1
-    
-    print(count)
+    #print(predictions)
     #print(train_labels)
 
-    #printPredsToFile(test, pred, predictions)
-    #eval(test, pred)
+    printPredsToFile(test, pred, predictions) #ændr test til dev
+    eval(pred)

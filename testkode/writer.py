@@ -14,23 +14,22 @@ def printPredsToFile(infile, outfile, res, infileenc="utf-8", skip=0):
     """
     outf = open(outfile, 'w')
     cntr = 0
-    for line in io.open(infile, encoding=infileenc, mode='r'): #for the unlabelled Trump dev file it's utf-8
-        if line.strip("\n").startswith('ID\t'):
-            outf.write(line.strip("\n"))
-        elif skip > 0:
-            skip -= 1
-        else:
-            outl = line.strip("\n").split("\t")
-            if res[cntr] == 0:
-                outl[3] = 'NONE'
-            elif res[cntr] == 1:
-                outl[3] = 'AGAINST'
-            elif res[cntr] == 2:
-                outl[3] = 'FAVOR'
+    for file in infile:
+        for line in io.open(file, encoding=infileenc, mode='r'):
+            if skip > 0:
+                skip -= 1
             else:
-                outl[3] = res[cntr]  # then it's already the type, not an integer
-            outf.write("\n" + "\t".join(outl))
-            cntr += 1
+                outl = line.strip("\n").split("\t")
+                if res[cntr] == 'anger':
+                    outl[3] = 'anger'
+                elif res[cntr] == 'joy':
+                    outl[3] = 'joy'
+                elif res[cntr] == 'sadness':
+                    outl[3] = 'sadness'
+                else:
+                    outl[3] = 'fear'
+                outf.write("\t".join(outl) + '\n')
+                cntr += 1
 
     outf.close()
 
@@ -65,16 +64,4 @@ def printPredsToFileByID(infile, outfile, ids, res, infileenc='utf-8'):
                 outl[3] = 'FAVOR'
             outf.write("\n" + "\t".join(outl))
 
-    outf.close()
-
-
-
-def eval(file_gold, file_pred, evalscript="eval.pl"):
-    """
-    Evaluate using the original script, needs to be in same format as train/dev data
-    :param file_gold: testing file with gold standard data
-    :param file_pred: file containing predictions
-    :param evalscript: file location for official eval script
-    """
-    pipe = subprocess.Popen(["perl", evalscript, file_gold, file_pred], stdout=sys.stdout)
-    pipe.communicate()
+    outf.close()()
