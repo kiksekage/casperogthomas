@@ -30,12 +30,13 @@ def extractFeatures(train, test):
     return train_features, train_labels_list, test_features, test_labels_list
 
 def featTransform(train_tweets, test_tweets):
-    TfidfV = TfidfVectorizer(train_tweets, max_features=1000, stop_words='english') #max_features=100, ngram_range=(1, 4), stop_words='english'
+    TfidfV = TfidfVectorizer(max_features=1000, stop_words='english') #max_features=100, ngram_range=(1, 4), stop_words='english'
     TfidfV.fit(train_tweets)
     #print(TfidfV.vocabulary_)
     train_features = TfidfV.transform(train_tweets)
     test_features = TfidfV.transform(test_tweets)
-    #print(features_train)
+    #print(train_features)
+    #print(test_features)
     return train_features, test_features, TfidfV.vocabulary
 
 def model_train(feats_train, labels):
@@ -52,19 +53,37 @@ def predict(model, features_test):
     return preds
 
 if __name__ == '__main__':
-    fp = "../testkode/data17/"
-    train = [fp + "train/anger-ratings-0to1.train.txt", fp + "train/fear-ratings-0to1.train.txt", fp + "train/joy-ratings-0to1.train.txt", fp + "train/sadness-ratings-0to1.train.txt"]
-    test = [fp + "test/anger-ratings-0to1.test.target.txt", fp + "test/fear-ratings-0to1.test.target.txt", fp + "test/joy-ratings-0to1.test.target.txt", fp + "test/sadness-ratings-0to1.test.target.txt"]
-    dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt", fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
-    pred = fp + "preds.txt"
+    if sys.argv[1] == '17':
+        fp = "../testkode/data17/"
+        train = [fp + "train/anger-ratings-0to1.train.txt", fp + "train/fear-ratings-0to1.train.txt", fp + "train/joy-ratings-0to1.train.txt", fp + "train/sadness-ratings-0to1.train.txt"]
+        test = [fp + "test/anger-ratings-0to1.test.target.txt", fp + "test/fear-ratings-0to1.test.target.txt", fp + "test/joy-ratings-0to1.test.target.txt", fp + "test/sadness-ratings-0to1.test.target.txt"]
+        dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt", fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
+        pred = fp + "preds.txt"
 
-    train_features, train_labels, test_features, test_labels = extractFeatures(train, test) #ændr test til dev
+        train_features, train_labels, test_features, test_labels = extractFeatures(train, test) #ændr test til dev
 
-    model = model_train(train_features, train_labels)
-    predictions = predict(model, test_features)
-    
-    #print(predictions)
-    #print(train_labels)
+        model = model_train(train_features, train_labels)
+        predictions = predict(model, test_features)
+        
+        #print(predictions)
+        #print(train_labels)
 
-    printPredsToFile(test, pred, predictions) #ændr test til dev
-    eval(pred)
+        printPredsToFile(test, pred, predictions) #ændr test til dev
+        eval(pred)
+    else:
+        fp = "../testkode/data18/2018-EI-reg-En-train/"
+        fp_test = "../testkode/data17/"
+        train = [fp + "2018-EI-reg-En-anger-train.txt", fp + "2018-EI-reg-En-fear-train.txt", fp + "2018-EI-reg-En-joy-train.txt", fp + "2018-EI-reg-En-sadness-train.txt"]
+        test = [fp_test + "test/anger-ratings-0to1.test.target.txt", fp_test + "test/fear-ratings-0to1.test.target.txt", fp_test + "test/joy-ratings-0to1.test.target.txt", fp_test + "test/sadness-ratings-0to1.test.target.txt"]
+        pred = fp + "preds.txt"
+
+        train_features, train_labels, test_features, test_labels = extractFeatures(train, test) #ændr test til dev
+
+        model = model_train(train_features, train_labels)
+        predictions = predict(model, test_features)
+        
+        #print(predictions)
+        #print(train_labels)
+
+        printPredsToFile(test, pred, predictions) #ændr test til dev
+        eval(pred)
