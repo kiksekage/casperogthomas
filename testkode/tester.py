@@ -58,7 +58,7 @@ if __name__ == '__main__':
         train = [fp + "train/anger-ratings-0to1.train.txt", fp + "train/fear-ratings-0to1.train.txt", fp + "train/joy-ratings-0to1.train.txt", fp + "train/sadness-ratings-0to1.train.txt"]
         test = [fp + "test/anger-ratings-0to1.test.target.txt", fp + "test/fear-ratings-0to1.test.target.txt", fp + "test/joy-ratings-0to1.test.target.txt", fp + "test/sadness-ratings-0to1.test.target.txt"]
         dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt", fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
-        pred = fp + "preds.txt"
+        pred = "../testkode/preds.txt"
 
         train_features, train_labels, test_features, test_labels = extractFeatures(train, test) #ændr test til dev
 
@@ -75,7 +75,7 @@ if __name__ == '__main__':
         fp_test = "../testkode/data17/"
         train = [fp + "2018-EI-reg-En-anger-train.txt", fp + "2018-EI-reg-En-fear-train.txt", fp + "2018-EI-reg-En-joy-train.txt", fp + "2018-EI-reg-En-sadness-train.txt"]
         test = [fp_test + "test/anger-ratings-0to1.test.target.txt", fp_test + "test/fear-ratings-0to1.test.target.txt", fp_test + "test/joy-ratings-0to1.test.target.txt", fp_test + "test/sadness-ratings-0to1.test.target.txt"]
-        pred = fp + "preds.txt"
+        pred = "../testkode/preds.txt"
 
         train_features, train_labels, test_features, test_labels = extractFeatures(train, test) #ændr test til dev
 
