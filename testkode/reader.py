@@ -21,6 +21,7 @@ def readTweetsOfficial(tweetfile, encoding='utf-8', tweetcolumn=2, topic="all"):
             targets.append(line.split("\t")[tweetcolumn])
             tweets.append(line.split("\t")[tweetcolumn-1])
             lid = line.split("\t")[0]
+            lid = lid.split("-")[4]
             v = np.zeros(1)
             v[0] = lid
             ids.append(v)
