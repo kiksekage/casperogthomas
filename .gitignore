@@ -1,4 +1,4 @@
 .DS_Store
 **/*.pyc
 testkode/preds.txt
-preds/**
+testkode/preds/**
