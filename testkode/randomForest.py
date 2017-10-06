@@ -3,7 +3,6 @@ sys.path.append("../")
 
 from reader import *
 from writer import *
-from eval import *
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_extraction.text import TfidfVectorizer
 
