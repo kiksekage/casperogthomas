@@ -106,11 +106,11 @@ if __name__ == '__main__':
 
         train = [fp + "2018-EI-reg-Ar-anger-train.txt", fp + "2018-EI-reg-Ar-fear-train.txt",
                  fp + "2018-EI-reg-Ar-joy-train.txt", fp + "2018-EI-reg-Ar-sadness-train.txt"]
-        test = [fp_dev + "2018-EI-reg-Ar-anger-dev.txt", fp_dev + "2018-EI-reg-Ar-fear-dev.txt",
+        dev = [fp_dev + "2018-EI-reg-Ar-anger-dev.txt", fp_dev + "2018-EI-reg-Ar-fear-dev.txt",
                 fp_dev + "2018-EI-reg-Ar-joy-dev.txt", fp_dev + "2018-EI-reg-Ar-sadness-dev.txt"]
 
         train_features, train_emotions, test_features, test_emotions = extractFeatures(
-            train, test)  # ændr test til dev
+            train, dev)  # ændr test til dev
 
         model = model_train(train_features, train_emotions)
         predictions = predict(model, test_features)
@@ -118,4 +118,4 @@ if __name__ == '__main__':
         # print(predictions)
         # print(train_emotions)
 
-        printPredsToFileClass(test, pred, predictions)  # ændr test til dev
+        printPredsToFileClass(dev, pred, predictions)  # ændr test til dev

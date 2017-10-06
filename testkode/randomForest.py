@@ -109,3 +109,24 @@ if __name__ == '__main__':
             #print(train_labels)
 
             printPredsToFileReg(test[i], pred_fold + pred_dict[i], predictions)  # aendr test til dev
+
+    elif sys.argv[1] == "arabic":
+        fp = "../testkode/data18/2018-EI-reg-Ar-train/"
+        fp_dev = "../testkode/data18/2018-EI-reg-Ar-dev/"
+
+        train = [fp + "2018-EI-reg-Ar-anger-train.txt", fp + "2018-EI-reg-Ar-fear-train.txt",
+                 fp + "2018-EI-reg-Ar-joy-train.txt", fp + "2018-EI-reg-Ar-sadness-train.txt"]
+        dev = [fp_dev + "2018-EI-reg-Ar-anger-dev.txt", fp_dev + "2018-EI-reg-Ar-fear-dev.txt",
+                fp_dev + "2018-EI-reg-Ar-joy-dev.txt", fp_dev + "2018-EI-reg-Ar-sadness-dev.txt"]
+
+        train_features, train_labels, test_features, test_labels = extractFeatures(
+            train, dev)  # aendr test til dev
+
+        for i, emotion in enumerate(train_features):
+            model = model_train(emotion, train_labels[i])
+            predictions = predict(model, test_features[i])
+       
+            #print(predictions)
+            #print(train_labels)
+
+            printPredsToFileReg(dev[i], pred_fold + pred_dict[i], predictions)  # aendr test til dev
