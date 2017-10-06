@@ -62,7 +62,7 @@ def predict(model, test_features):
     return preds
 
 if __name__ == '__main__':
-    pred_dict = {0 : 'anger_pred.txt', 1 : 'fear_pred.txt', 2 : 'joy_pred.txt', 3 : 'sadness_pred.txt'}
+    pred_dict = {0 : 'anger-pred.txt', 1 : 'fear-pred.txt', 2 : 'joy-pred.txt', 3 : 'sadness-pred.txt'}
     pred_fold = 'preds/'
 
     if sys.argv[1] == '17':

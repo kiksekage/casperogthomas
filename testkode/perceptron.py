@@ -76,7 +76,7 @@ if __name__ == '__main__':
         #print(predictions)
         #print(train_emotions)
 
-        printPredsToFileReg(test, pred, predictions)  # aen test til dev
+        printPredsToFileClass(test, pred, predictions)  # aen test til dev
 
     elif sys.argv[1] == '18':
         fp = "../testkode/data18/2018-EI-reg-En-train/"
