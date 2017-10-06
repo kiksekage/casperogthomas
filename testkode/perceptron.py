@@ -79,6 +79,7 @@ if __name__ == '__main__':
 
         printPredsToFileReg(test, pred, predictions)  # aen test til dev
         eval(pred)
+
     elif sys.argv[1] == '18':
         fp = "../testkode/data18/2018-EI-reg-En-train/"
         fp_test = "../testkode/data17/"
@@ -99,7 +100,8 @@ if __name__ == '__main__':
 
         printPredsToFileClass(test, pred, predictions)  # aendr test til dev
         eval(pred)
-    if sys.argv[1] == 'arabic':
+
+    elif sys.argv[1] == 'arabic':
         fp = "../testkode/data18/2018-EI-reg-Ar-train/"
         fp_dev = "../testkode/data18/2018-EI-reg-Ar-dev/"
 
