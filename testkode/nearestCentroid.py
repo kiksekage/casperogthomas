@@ -12,25 +12,25 @@ def extractFeatures(train, test):
     test_tweets_list = []
     train_tweets_list = []
 
-    test_labels_list = []
-    train_labels_list = []
+    test_emotions_list = []
+    train_emotions_list = []
 
     for file in test:
         test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(
             file)
         test_tweets_list.extend(test_tweets)
-        test_labels_list.extend(test_emotion)
+        test_emotions_list.extend(test_emotion)
 
     for file in train:
         train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(
             file)
         train_tweets_list.extend(train_tweets)
-        train_labels_list.extend(train_emotion)
+        train_emotions_list.extend(train_emotion)
 
     train_features, test_features, vocab = featTransform(
         train_tweets_list, test_tweets_list)
 
-    return train_features, train_labels_list, test_features, test_labels_list
+    return train_features, train_emotions_list, test_features, test_emotions_list
 
 
 def featTransform(train_tweets, test_tweets):
@@ -45,9 +45,9 @@ def featTransform(train_tweets, test_tweets):
     return train_features, test_features, TfidfV.vocabulary
 
 
-def model_train(train_features, train_labels):
+def model_train(train_features, train_emotions):
     model = NearestCentroid()
-    model.fit(train_features, train_labels)
+    model.fit(train_features, train_emotions)
     return model
 
 
@@ -70,16 +70,16 @@ if __name__ == '__main__':
         dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt",
                fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
 
-        train_features, train_labels, test_features, test_labels = extractFeatures(
+        train_features, train_emotions, test_features, test_emotions = extractFeatures(
             train, test)  # ændr test til dev
 
-        model = model_train(train_features, train_labels)
+        model = model_train(train_features, train_emotions)
         predictions = predict(model, test_features)
 
         # print(predictions)
-        # print(train_labels)
+        # print(train_emotions)
 
-        printPredsToFile(test, pred, predictions)  # ændr test til dev
+        printPredsToFileClass(test, pred, predictions)  # ændr test til dev
         eval(pred)
     elif sys.argv[1] == '18':
         fp = "../testkode/data18/2018-EI-reg-En-train/"
@@ -89,17 +89,17 @@ if __name__ == '__main__':
                  fp + "2018-EI-reg-En-joy-train.txt", fp + "2018-EI-reg-En-sadness-train.txt"]
         test = [fp_test + "test/anger-ratings-0to1.test.target.txt", fp_test + "test/fear-ratings-0to1.test.target.txt",
                 fp_test + "test/joy-ratings-0to1.test.target.txt", fp_test + "test/sadness-ratings-0to1.test.target.txt"]
-
-        train_features, train_labels, test_features, test_labels = extractFeatures(
+        
+        train_features, train_emotions, test_features, test_emotions = extractFeatures(
             train, test)  # ændr test til dev
 
-        model = model_train(train_features, train_labels)
+        model = model_train(train_features, train_emotions)
         predictions = predict(model, test_features)
 
         # print(predictions)
-        # print(train_labels)
+        # print(train_emotions)
 
-        printPredsToFile(test, pred, predictions)  # ændr test til dev
+        printPredsToFileClass(test, pred, predictions)  # ændr test til dev
         eval(pred)
     if sys.argv[1] == 'arabic':
         fp = "../testkode/data18/2018-EI-reg-Ar-train/"
@@ -110,14 +110,14 @@ if __name__ == '__main__':
         test = [fp_dev + "2018-EI-reg-Ar-anger-dev.txt", fp_dev + "2018-EI-reg-Ar-fear-dev.txt",
                 fp_dev + "2018-EI-reg-Ar-joy-dev.txt", fp_dev + "2018-EI-reg-Ar-sadness-dev.txt"]
 
-        train_features, train_labels, test_features, test_labels = extractFeatures(
+        train_features, train_emotions, test_features, test_emotions = extractFeatures(
             train, test)  # ændr test til dev
 
-        model = model_train(train_features, train_labels)
+        model = model_train(train_features, train_emotions)
         predictions = predict(model, test_features)
 
         # print(predictions)
-        # print(train_labels)
+        # print(train_emotions)
 
-        printPredsToFile(test, pred, predictions)  # ændr test til dev
+        printPredsToFileClass(test, pred, predictions)  # ændr test til dev
         eval(pred)

@@ -10,10 +10,11 @@ def eval(infile):
     precision = [0,0,0,0]
     recall = [0,0,0,0]
     f_score = [0,0,0,0]
+    avg = 0
 
     #print(emdict['anger'])
 
-    with open(infile, 'r') as f:
+    with open(infile, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip('\n').split('\t')
             emotion_count[emdict[line[2]]] += 1
@@ -33,3 +34,7 @@ def eval(infile):
     for i in range(4):
         print("{!s} values:".format(revdict[i]))
         print("Precision : {!s}, recall : {!s}, f-score : {!s}".format(precision[i], recall[i], f_score[i]))
+
+    for score in f_score:
+        avg += score
+    print("Macro f-score : {!s}".format(avg/len(f_score)))

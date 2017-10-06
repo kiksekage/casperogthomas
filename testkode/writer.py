@@ -3,7 +3,7 @@ import subprocess
 import sys
 import numpy as np
 
-def printPredsToFile(infile, outfile, res, infileenc="utf-8", skip=0):
+def printPredsToFileClass(infile, outfile, res, infileenc="utf-8", skip=0):
     """
     Print predictions to file in SemEval format so the official eval script can be applied
     :param infile: official stance data for which predictions are made
@@ -33,7 +33,7 @@ def printPredsToFile(infile, outfile, res, infileenc="utf-8", skip=0):
 
     outf.close()
 
-def printPredsToFileByID(infile, outfile, ids, res, infileenc='utf-8'):
+def printPredsToFileReg(infile, outfile, res, infileenc="utf-8", skip=0):
     """
     Print predictions to file in SemEval format so the official eval script can be applied
     :param infile: official stance data for which predictions are made
@@ -42,26 +42,15 @@ def printPredsToFileByID(infile, outfile, ids, res, infileenc='utf-8'):
     :param res: python list of results. 0 for NONE predictions, 1 for AGAINST predictions, 2 for FAVOR
     :param skip: how many testing instances to skip from the beginning, useful if part of the file is used for dev instead of test
     """
-    outf = open(outfile, 'w')
-    for line in io.open(infile, encoding=infileenc, mode='r'): #for the unlabelled Trump dev file it's utf-8
-        if line.strip("\n").startswith('ID\t'):
-            outf.write(line.strip("\n"))
+    outf = open(outfile, 'w', encoding=infileenc)
+    cntr = 0
+    for line in io.open(infile, encoding=infileenc, mode='r'):
+        if skip > 0:
+            skip -= 1
         else:
             outl = line.strip("\n").split("\t")
-            realid = np.asarray(outl[0], dtype=np.float64)
-            cnt = 0
-            for tid in ids:
-                if tid == realid:
-                    idx = cnt
-                    #print("found!")
-                    break
-                cnt += 1
-            if res[idx] == 0:
-                outl[3] = 'NONE'
-            elif res[idx] == 1:
-                outl[3] = 'AGAINST'
-            elif res[idx] == 2:
-                outl[3] = 'FAVOR'
-            outf.write("\n" + "\t".join(outl))
+            outl[3] = str(res[cntr])
+            outf.write("\t".join(outl) + '\n')
+            cntr += 1
 
-    outf.close()()
+    outf.close()
