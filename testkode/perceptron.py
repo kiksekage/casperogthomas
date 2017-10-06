@@ -3,7 +3,6 @@ sys.path.append("../")
 
 from reader import *
 from writer import *
-from eval import *
 from sklearn.linear_model import Perceptron
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -78,7 +77,6 @@ if __name__ == '__main__':
         #print(train_emotions)
 
         printPredsToFileReg(test, pred, predictions)  # aen test til dev
-        eval(pred)
 
     elif sys.argv[1] == '18':
         fp = "../testkode/data18/2018-EI-reg-En-train/"
@@ -99,7 +97,6 @@ if __name__ == '__main__':
         #print(train_emotions)
 
         printPredsToFileClass(test, pred, predictions)  # aendr test til dev
-        eval(pred)
 
     elif sys.argv[1] == 'arabic':
         fp = "../testkode/data18/2018-EI-reg-Ar-train/"
@@ -120,4 +117,3 @@ if __name__ == '__main__':
         #print(train_emotions)
 
         printPredsToFileClass(test, pred, predictions)  # aendr test til dev
-        eval(pred)

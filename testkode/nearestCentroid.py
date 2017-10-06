@@ -3,7 +3,6 @@ sys.path.append("../")
 
 from reader import *
 from writer import *
-from eval import *
 from sklearn.neighbors import NearestCentroid
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -80,7 +79,6 @@ if __name__ == '__main__':
         # print(train_emotions)
 
         printPredsToFileClass(test, pred, predictions)  # ændr test til dev
-        eval(pred)
 
     elif sys.argv[1] == '18':
         fp = "../testkode/data18/2018-EI-reg-En-train/"
@@ -101,7 +99,6 @@ if __name__ == '__main__':
         # print(train_emotions)
 
         printPredsToFileClass(test, pred, predictions)  # ændr test til dev
-        eval(pred)
 
     elif sys.argv[1] == 'arabic':
         fp = "../testkode/data18/2018-EI-reg-Ar-train/"
@@ -122,4 +119,3 @@ if __name__ == '__main__':
         # print(train_emotions)
 
         printPredsToFileClass(test, pred, predictions)  # ændr test til dev
-        eval(pred)
