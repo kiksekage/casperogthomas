@@ -6,6 +6,7 @@ from writer import *
 from sklearn.neighbors import NearestCentroid
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+stop_words = [(x.strip()) for x in open('arabic-stop-words.txt','r').read().split('\n')]
 
 def extractFeatures(train, test):
     test_tweets_list = []
@@ -34,7 +35,7 @@ def extractFeatures(train, test):
 
 def featTransform(train_tweets, test_tweets):
     # max_features=100, ngram_range=(1, 4), stop_words='english'
-    TfidfV = TfidfVectorizer(max_features=1000, stop_words='english')
+    TfidfV = TfidfVectorizer(analyzer='word', max_features=50000, ngram_range=(2,4), stop_words='english')
     TfidfV.fit(train_tweets)
     # print(TfidfV.vocabulary_)
     train_features = TfidfV.transform(train_tweets)
