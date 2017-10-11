@@ -3,51 +3,13 @@ sys.path.append("../")
 
 from reader import *
 from writer import *
+from feature_extractor import *
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-
-def extractFeatures(train, test):
-    test_tweets_list = []
-    train_tweets_list = []
-
-    test_labels_list = []
-    train_labels_list = []
-
-    test_features_list = []
-    train_features_list = []
-
-    for file in test:
-        test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(
-            file)
-        test_tweets_list.append(test_tweets)
-        test_labels_list.append(test_labels)
-
-    for file in train:
-        train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(
-            file)
-        train_tweets_list.append(train_tweets)
-        train_labels_list.append(train_labels)
-
-    for i in range(4):
-        train_features, test_features, vocab = featTransform(
-            train_tweets_list[i], test_tweets_list[i])
-        test_features_list.append(test_features)
-        train_features_list.append(train_features)
-
-    return train_features_list, train_labels_list, test_features_list, test_labels_list
-
-
-def featTransform(train_tweets, test_tweets):
-    # max_features=100, ngram_range=(1, 4), stop_words='english'
-    TfidfV = TfidfVectorizer(max_features=1000, stop_words='english')
-    TfidfV.fit(train_tweets)
-    #print(TfidfV.vocabulary_)
-    train_features = TfidfV.transform(train_tweets)
-    test_features = TfidfV.transform(test_tweets)
-    #print(train_features)
-    #print(test_features)
-    return train_features, test_features, TfidfV.vocabulary
+from sklearn.feature_selection import VarianceThreshold
+    
+    #selector = VarianceThreshold(0.2)
+    #train_features = selector.fit_transform(train_features)
+    #test_features = selector.fit_transform(test_features)
 
 
 def model_train(train_features, train_labels):
@@ -75,8 +37,7 @@ if __name__ == '__main__':
         dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt",
                fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
 
-        train_features, train_labels, test_features, test_labels = extractFeatures(
-            train, test)  # aendr test til dev
+        train_features, train_labels, test_features, test_labels = extractFeatures(train, test, 'reg')  # aendr test til dev
 
         for i, emotion in enumerate(train_features):
             model = model_train(emotion, train_labels[i])
@@ -98,8 +59,7 @@ if __name__ == '__main__':
         dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt",
                fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
 
-        train_features, train_labels, test_features, test_labels = extractFeatures(
-            train, test)  # aendr test til dev
+        train_features, train_labels, test_features, test_labels = extractFeatures(train, test, 'reg')  # aendr test til dev
 
         for i, emotion in enumerate(train_features):
             model = model_train(emotion, train_labels[i])
@@ -119,8 +79,7 @@ if __name__ == '__main__':
         dev = [fp_dev + "2018-EI-reg-Ar-anger-dev.txt", fp_dev + "2018-EI-reg-Ar-fear-dev.txt",
                 fp_dev + "2018-EI-reg-Ar-joy-dev.txt", fp_dev + "2018-EI-reg-Ar-sadness-dev.txt"]
 
-        train_features, train_labels, test_features, test_labels = extractFeatures(
-            train, dev)  # aendr test til dev
+        train_features, train_labels, test_features, test_labels = extractFeatures(train, test, 'reg')  # aendr test til dev
 
         for i, emotion in enumerate(train_features):
             model = model_train(emotion, train_labels[i])
