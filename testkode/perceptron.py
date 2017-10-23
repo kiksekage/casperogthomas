@@ -33,8 +33,9 @@ if __name__ == '__main__':
         dev = [fp + "dev/anger-ratings-0to1.dev.txt", fp + "dev/fear-ratings-0to1.dev.txt",
                fp + "dev/joy-ratings-0to1.dev.txt", fp + "dev/sadness-ratings-0to1.dev.txt"]
 
-        train_features, train_emotions, test_features, test_emotions = extractFeatures(train, test, 'class')  # aendr test til dev
+        train_features, train_emotions, test_features, test_emotions = extractFeatures(train, test, 'class', ngram_range=(1, 3))  # aendr test til dev
 
+        print(train_features[0])
         model = model_train(train_features, train_emotions)
         predictions = predict(model, test_features)
 

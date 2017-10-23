@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import sys
 sys.path.append("../")
 
-def extractFeatures(train, test, task, analyzer='word', max_features=50000, ngram_range=(2, 4), stop_words='english'):
+def extractFeatures(train, test, task, analyzer='word', max_features=5000, ngram_range=(2, 4), stop_words='english'):
     if task == 'class':
         test_tweets_list = []
         train_tweets_list = []
@@ -14,12 +14,12 @@ def extractFeatures(train, test, task, analyzer='word', max_features=50000, ngra
         train_emotions_list = []
 
         for file in test:
-            test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(file)
+            test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(file, task=task)
             test_tweets_list.extend(test_tweets)
             test_emotions_list.extend(test_emotion)
 
         for file in train:
-            train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(file)
+            train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(file, task=task)
             train_tweets_list.extend(train_tweets)
             train_emotions_list.extend(train_emotion)
 
@@ -43,7 +43,7 @@ def extractFeatures(train, test, task, analyzer='word', max_features=50000, ngra
             test_labels_list.append(test_labels)
 
         for file in train:
-            train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(file)
+            train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(file, task=task)
             train_tweets_list.append(train_tweets)
             train_labels_list.append(train_labels)
 
