@@ -1,7 +1,10 @@
 import gensim
 
+from sklearn.manifold import TSNE
 from reader import *
 from writer import *
+import pandas as pd
+import matplotlib.pyplot as plt
 
 import sys
 sys.path.append("../")
@@ -10,8 +13,25 @@ train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial("../te
 
 #print(train_tweets)
 
-model = gensim.models.Word2Vec(sentences=train_tweets, window=10, size=300, sg=1)
+model = gensim.models.Word2Vec(sentences=train_tweets, window=5, size=300, sg=1)
 
-print(model.wv.vocab)
+vocab = list(model.wv.vocab)
+X = model[vocab]
 
-#print(model.wv.most_similar(positive=["fuck"]))
+tsne = TSNE(n_components=2)
+my_tsne = tsne.fit_transform(X)
+
+df = pd.concat([pd.DataFrame(my_tsne),
+                pd.Series(vocab)],
+               axis=1)
+
+df.columns = ['x', 'y', 'word']
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+
+ax.scatter(df['x'], df['y'])
+for i, txt in enumerate(df['word']):
+    ax.annotate(txt, (df['x'].iloc[i], df['y'].iloc[i]))
+
+plt.show()
