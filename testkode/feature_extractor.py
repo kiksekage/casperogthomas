@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import sys
 sys.path.append("../")
 
-def extractFeatures(train, test, task, analyzer='word', max_features=5000, ngram_range=(2, 4), stop_words='english'):
+def extractFeatures(train, test, task, analyzer='word', max_features=1000, ngram_range=(2, 4), stop_words='english'):
     if task == 'class':
         test_tweets_list = []
         train_tweets_list = []
@@ -59,9 +59,27 @@ def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range
     # max_features=100, ngram_range=(1, 4), stop_words='english'
     TfidfV = TfidfVectorizer(analyzer=analyzer, max_features=max_features, ngram_range=ngram_range, stop_words=stop_words)
     TfidfV.fit(train_tweets)
-    # print(TfidfV.vocabulary_)
+    # print(TfidfV.vocabulary_)            
     train_features = TfidfV.transform(train_tweets)
     test_features = TfidfV.transform(test_tweets)
+    train_features = train_features.todense()
+    test_features = test_features.todense()
+    feat_train = []
+    feat_test = []
+    for i, tweet in enumerate(train_tweets):
+        if '!' in tweet:
+            feat_train.append([1])
+        else:
+            feat_train.append([0])
+
+    for j, tweets in enumerate(test_tweets):
+        if '!' in tweets:
+            feat_test.append([1])
+        else:
+            feat_test.append([0])
+    train_features = np.append(train_features, feat_train, 1)
+    test_features = np.append(test_features, feat_test, 1)
+
     # print(train_features)
     # print(test_features)
     return train_features, test_features, TfidfV.vocabulary
