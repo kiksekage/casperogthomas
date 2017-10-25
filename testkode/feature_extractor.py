@@ -64,4 +64,4 @@ def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range
     test_features = TfidfV.transform(test_tweets)
     # print(train_features)
     # print(test_features)
-    return train_features, test_features, TfidfV.vocabulary
+    return train_features, test_features, TfidfV.vocabulary_
