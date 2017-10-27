@@ -1,11 +1,45 @@
 from reader import *
 from writer import *
 from sklearn.feature_extraction.text import TfidfVectorizer
+import enchant
 
 import sys
 sys.path.append("../")
 
-def extractFeatures(train, test, task, analyzer='word', max_features=1000, ngram_range=(2, 4), stop_words='english'):
+def exclamationFeature(tweets):
+    feat_list = []
+    for i, tweet in enumerate(tweets):
+        if '!' in tweet:
+            feat_list.append([1])
+        else:
+            feat_list.append([0])
+    return feat_list
+
+def spellError(tweets):
+    cntr = 0
+    feat_list = []
+    d = enchant.Dict('en_US')
+    for tweet in tweets:
+        words = tweet.split(" ")
+        for word in words:
+            if (word.startswith(('#', '@')) or (word == '')):
+                continue
+            else:
+                if (not(d.check(word))):
+                    cntr+=1
+        #print(cntr)
+        #print(len(words))
+        if (cntr/(len(words)) > 0.10):
+            feat_list.append([1])
+        else:
+            feat_list.append([0])
+        cntr = 0
+    return feat_list
+        
+
+
+
+def extractFeatures(train, test, task, analyzer='word', max_features=500, ngram_range=(1, 1), stop_words='english'):
     if task == 'class':
         test_tweets_list = []
         train_tweets_list = []
@@ -64,21 +98,18 @@ def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range
     test_features = TfidfV.transform(test_tweets)
     train_features = train_features.todense()
     test_features = test_features.todense()
-    feat_train = []
-    feat_test = []
-    for i, tweet in enumerate(train_tweets):
-        if '!' in tweet:
-            feat_train.append([1])
-        else:
-            feat_train.append([0])
+    
+    exclam_feat_train = exclamationFeature(train_tweets)
+    exclam_feat_test = exclamationFeature(test_tweets)
 
-    for j, tweets in enumerate(test_tweets):
-        if '!' in tweets:
-            feat_test.append([1])
-        else:
-            feat_test.append([0])
-    train_features = np.append(train_features, feat_train, 1)
-    test_features = np.append(test_features, feat_test, 1)
+    spell_feat_train = spellError(train_tweets)
+    spell_feat_test = spellError(test_tweets)
+   
+    train_features = np.append(train_features, exclam_feat_train, 1)
+    test_features = np.append(test_features, exclam_feat_test, 1)
+
+    train_features = np.append(train_features, spell_feat_train, 1)
+    test_features = np.append(test_features, spell_feat_test, 1)
 
     # print(train_features)
     # print(test_features)

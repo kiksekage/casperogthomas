@@ -26,7 +26,8 @@ def runner(model, language, year):
         for i, emotion in enumerate(train_features):
             model_object = train_random_forest(emotion, train_labels[i])
             preds = predictor(model_object, test_features[i])    
-            printPredsToFileReg(test_files[i], pred_fold + pred_dict[i], preds) 
+            printPredsToFileReg(test_files[i], pred_fold + pred_dict[i], preds)
+            #print((sorted(range(len(model_object.feature_importances_)), key=lambda k: model_object.feature_importances_[k])).index(501))
 
 if __name__ == '__main__':
     #python3 sem_eval.py model language year

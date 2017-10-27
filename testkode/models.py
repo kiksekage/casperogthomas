@@ -18,7 +18,7 @@ def train_nearest_centroid(train_features, train_emotions):
     return nearest_centroid
 
 def train_random_forest(train_features, train_labels):
-    random_forest = RandomForestRegressor()
+    random_forest = RandomForestRegressor(random_state=1, n_estimators=10)
     random_forest.fit(train_features, train_labels)
     return random_forest
 
