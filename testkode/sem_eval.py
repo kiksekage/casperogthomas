@@ -25,7 +25,7 @@ def runner(model, language, year):
         train_features, train_labels, test_features, test_labels = extractFeatures(train_files, test_files, 'reg')
         for i, emotion in enumerate(train_features):
             model_object = train_random_forest(emotion, train_labels[i])
-            preds = predictor(model, test_features[i])    
+            preds = predictor(model_object, test_features[i])    
             printPredsToFileReg(test_files[i], pred_fold + pred_dict[i], preds) 
 
 if __name__ == '__main__':
