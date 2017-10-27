@@ -1,12 +1,11 @@
-filename_dict = {'anger' : 0, 'fear' : 1, 'joy' : 2, 'sadness' : 3}
-
-pred = "../testkode/preds.txt"
-    
 fp = "../testkode/"
+
+pred_dict = {0 : 'anger-pred.txt', 1 : 'fear-pred.txt', 2 : 'joy-pred.txt', 3 : 'sadness-pred.txt'}
+pred_file = "../testkode/preds.txt"
+pred_fold = fp + "preds/"
+
 fp17 = fp + "data17/"
 fp18 = fp + "data18/"
-
-preds = fp + "preds/"
 
 fp17_train = fp17 + "train/"
 train_class_17 = [fp17_train + "anger-ratings-0to1.train.txt", fp17_train + "fear-ratings-0to1.train.txt",
@@ -80,12 +79,27 @@ fp18_class_dev_es = fp18 + "class/2018-EI-oc-Es-dev/"
 dev_class_18_es = [fp18_class_dev_es + "2018-EI-oc-Ar-anger-train.txt", fp18_class_dev_es + "2018-EI-oc-Ar-fear-train.txt",
                  fp18_class_dev_es + "2018-EI-oc-Ar-joy-train.txt", fp18_class_dev_es + "2018-EI-oc-En-sadness-train.txt"]
 
-reg_file_list = [train_reg_18_en, dev_reg_18_en, train_reg_18_ar, dev_reg_18_ar, train_reg_18_es, dev_reg_18_es]
-class_file_list = [train_class_18_en, dev_class_18_en, train_class_18_ar, dev_class_18_ar, train_class_18_es, dev_class_18_es]
+########################### FILE LIST, 17 ###########################
 
+file_list_17 = [train_class_17, test_class_17, dev_class_17]
 
-#print(class_file_list[0])
+list_dict_17 = {"train" : 0, "test" : 1, "dev" : 2}
 
-#def filepath_returner(language, year, task):
-#    if task == 'reg':
-#        language+year       
+########################### FILE LIST, 18 ###########################
+
+file_list_18 = [train_reg_18_en, dev_reg_18_en, train_reg_18_ar, dev_reg_18_ar, train_reg_18_es, dev_reg_18_es,
+            train_class_18_en, dev_class_18_en, train_class_18_ar, dev_class_18_ar, train_class_18_es, dev_class_18_es]
+
+list_dict_18 = {"reg en train" : 0, "reg en dev" : 1, "reg ar train" : 2, "reg ar dev" : 3, "reg es train" : 4, "reg es dev" : 5,
+                "class en train" : 6, "class en dev" : 7, "class ar train" : 8, "class ar dev" : 9, "class es train" : 10, "class es dev" : 11}
+
+def filepath_returner(task, language, year):
+    if year == '18':
+        dict_string_train = ' '.join([task, language, "train"])
+        dict_string_dev = ' '.join([task, language, "dev"])
+        return file_list_18[list_dict_18[dict_string_train]], file_list_18[list_dict_18[dict_string_dev]]
+    elif year == '17':
+        return file_list_17[list_dict_17["train"]], file_list_17[list_dict_17["dev"]]
+
+#print(filepath_returner("en", "17", "class", "train"))
+#print(filepath_returner("class", "en", "18"))
