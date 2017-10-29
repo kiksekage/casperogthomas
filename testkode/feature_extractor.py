@@ -2,44 +2,50 @@ from reader import *
 from writer import *
 from sklearn.feature_extraction.text import TfidfVectorizer
 import enchant
+from emoji import UNICODE_EMOJI
 
 import sys
 sys.path.append("../")
+        
+def featureMerger(tweets, exclam=False, spelling=False, emoji=False, hashtag=False):
+    width = exclam + spelling + emoji + hashtag# + neg_emoji + pos_emoji
+    if (width==True):
+        width = 1
+    feat_list = np.zeros((len(tweets), width))
 
-def exclamationFeature(tweets):
-    feat_list = []
-    for i, tweet in enumerate(tweets):
-        if '!' in tweet:
-            feat_list.append([1])
-        else:
-            feat_list.append([0])
-    return feat_list
-
-def spellError(tweets):
-    cntr = 0
-    feat_list = []
     d = enchant.Dict('en_US')
-    for tweet in tweets:
+    error_cntr = 0
+    detected = False
+
+    for i, tweet in enumerate(tweets):
+        pos = width
         words = tweet.split(" ")
+        if ('!' in tweet and (exclam)):
+            feat_list[i][width-pos] = 1
+        if (exclam):
+            pos -= 1
+        if ('#' in tweet and (hashtag)):
+            feat_list[i][width-pos] = 1
+        if(hashtag):
+            pos -= 1
         for word in words:
-            if (word.startswith(('#', '@')) or (word == '')):
+            if ((word.startswith(('#', '@')) or (word == '')) and (spelling)):
                 continue
             else:
                 if (not(d.check(word))):
-                    cntr+=1
-        #print(cntr)
-        #print(len(words))
-        if (cntr/(len(words)) > 0.10):
-            feat_list.append([1])
-        else:
-            feat_list.append([0])
-        cntr = 0
+                    error_cntr+=1
+            if ((word in UNICODE_EMOJI) and not(detected) and (emoji)):
+                detected = True
+        if ((error_cntr/(len(words)) > 0.6) and (spelling)):
+            feat_list[i][width-pos] = 1
+        if(spelling):
+            pos -= 1
+        if ((detected) and (emoji)):
+            feat_list[i][width-pos] = 1
     return feat_list
-        
 
 
-
-def extractFeatures(train, test, task, analyzer='word', max_features=500, ngram_range=(1, 1), stop_words='english'):
+def extractFeatures(train, test, task, analyzer='word', max_features=500, ngram_range=(1, 3), stop_words='english'):
     if task == 'class':
         test_tweets_list = []
         train_tweets_list = []
@@ -98,19 +104,12 @@ def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range
     test_features = TfidfV.transform(test_tweets)
     train_features = train_features.todense()
     test_features = test_features.todense()
-    
-    exclam_feat_train = exclamationFeature(train_tweets)
-    exclam_feat_test = exclamationFeature(test_tweets)
 
-    spell_feat_train = spellError(train_tweets)
-    spell_feat_test = spellError(test_tweets)
-   
-    train_features = np.append(train_features, exclam_feat_train, 1)
-    test_features = np.append(test_features, exclam_feat_test, 1)
+    train_custom_feat = featureMerger(train_tweets, emoji=True, exclam=True, hashtag=True, spelling=True)
+    train_features = np.append(train_features, train_custom_feat, 1)
 
-    train_features = np.append(train_features, spell_feat_train, 1)
-    test_features = np.append(test_features, spell_feat_test, 1)
-
+    test_custom_feat = featureMerger(test_tweets, emoji=True, exclam=True, hashtag=True, spelling=True)
+    test_features = np.append(test_features, test_custom_feat, 1)
     # print(train_features)
     # print(test_features)
     return train_features, test_features, TfidfV.vocabulary_

@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 #stop_words = [(x.strip()) for x in open('arabic-stop-words.txt','r').read().split('\n')]
 
 def train_perceptron(train_features, train_emotions):
-    perceptron = Perceptron()
+    perceptron = Perceptron(max_iter=1000, tol=1e-3)
     perceptron.fit(train_features, train_emotions)
     return perceptron
 
