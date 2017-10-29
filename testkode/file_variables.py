@@ -37,17 +37,17 @@ train_reg_18_ar = [fp18_reg_train_ar + "2018-EI-reg-Ar-anger-train.txt", fp18_re
 
 fp18_reg_dev_ar = fp18 + "reg/2018-EI-reg-Ar-dev/"
 dev_reg_18_ar = [fp18_reg_dev_ar + "2018-EI-reg-Ar-anger-dev.txt", fp18_reg_dev_ar + "2018-EI-reg-Ar-fear-dev.txt",
-                 fp18_reg_dev_ar + "2018-EI-reg-Ar-joy-dev.txt", fp18_reg_dev_ar + "2018-EI-reg-En-sadness-dev.txt"]
+                 fp18_reg_dev_ar + "2018-EI-reg-Ar-joy-dev.txt", fp18_reg_dev_ar + "2018-EI-reg-Ar-sadness-dev.txt"]
 
 ########################### SPANISH DATASETS, REG ###########################
 
 fp18_reg_train_es = fp18 + "reg/2018-EI-reg-Es-train/"
-train_reg_18_es = [fp18_reg_train_es + "2018-EI-reg-Ar-anger-train.txt", fp18_reg_train_es + "2018-EI-reg-Ar-fear-train.txt",
-                 fp18_reg_train_es + "2018-EI-reg-Ar-joy-train.txt", fp18_reg_train_es + "2018-EI-reg-Ar-sadness-train.txt"]
+train_reg_18_es = [fp18_reg_train_es + "2018-EI-reg-Es-anger-train.txt", fp18_reg_train_es + "2018-EI-reg-Es-fear-train.txt",
+                 fp18_reg_train_es + "2018-EI-reg-Es-joy-train.txt", fp18_reg_train_es + "2018-EI-reg-Es-sadness-train.txt"]
 
 fp18_reg_dev_es = fp18 + "reg/2018-EI-reg-Es-dev/"
-dev_reg_18_es = [fp18_reg_dev_es + "2018-EI-reg-Ar-anger-dev.txt", fp18_reg_dev_es + "2018-EI-reg-Ar-fear-dev.txt",
-                 fp18_reg_dev_es + "2018-EI-reg-Ar-joy-dev.txt", fp18_reg_dev_es + "2018-EI-reg-En-sadness-dev.txt"]
+dev_reg_18_es = [fp18_reg_dev_es + "2018-EI-reg-Es-anger-dev.txt", fp18_reg_dev_es + "2018-EI-reg-Es-fear-dev.txt",
+                 fp18_reg_dev_es + "2018-EI-reg-Es-joy-dev.txt", fp18_reg_dev_es + "2018-EI-reg-Es-sadness-dev.txt"]
 
 ########################### ENGLISH DATASETS, CLASS ###########################
 
@@ -67,17 +67,17 @@ train_class_18_ar = [fp18_class_train_ar + "2018-EI-oc-Ar-anger-train.txt", fp18
 
 fp18_class_dev_ar = fp18 + "class/2018-EI-oc-Ar-dev/"
 dev_class_18_ar = [fp18_class_dev_ar + "2018-EI-oc-Ar-anger-dev.txt", fp18_class_dev_ar + "2018-EI-oc-Ar-fear-dev.txt",
-                 fp18_class_dev_ar + "2018-EI-oc-Ar-joy-dev.txt", fp18_class_dev_ar + "2018-EI-oc-En-sadness-dev.txt"]
+                 fp18_class_dev_ar + "2018-EI-oc-Ar-joy-dev.txt", fp18_class_dev_ar + "2018-EI-oc-Ar-sadness-dev.txt"]
 
 ########################### SPANISH DATASETS, CLASS ###########################
 
 fp18_class_train_es = fp18 + "class/2018-EI-oc-Es-train/"
-train_class_18_es = [fp18_class_train_es + "2018-EI-oc-Ar-anger-train.txt", fp18_class_train_es + "2018-EI-oc-Ar-fear-train.txt",
-                 fp18_class_train_es + "2018-EI-oc-Ar-joy-train.txt", fp18_class_train_es + "2018-EI-oc-Ar-sadness-train.txt"]
+train_class_18_es = [fp18_class_train_es + "2018-EI-oc-Es-anger-train.txt", fp18_class_train_es + "2018-EI-oc-Es-fear-train.txt",
+                 fp18_class_train_es + "2018-EI-oc-Es-joy-train.txt", fp18_class_train_es + "2018-EI-oc-Es-sadness-train.txt"]
 
 fp18_class_dev_es = fp18 + "class/2018-EI-oc-Es-dev/"
-dev_class_18_es = [fp18_class_dev_es + "2018-EI-oc-Ar-anger-dev.txt", fp18_class_dev_es + "2018-EI-oc-Ar-fear-dev.txt",
-                 fp18_class_dev_es + "2018-EI-oc-Ar-joy-dev.txt", fp18_class_dev_es + "2018-EI-oc-En-sadness-dev.txt"]
+dev_class_18_es = [fp18_class_dev_es + "2018-EI-oc-Es-anger-dev.txt", fp18_class_dev_es + "2018-EI-oc-Es-fear-dev.txt",
+                 fp18_class_dev_es + "2018-EI-oc-Es-joy-dev.txt", fp18_class_dev_es + "2018-EI-oc-Es-sadness-dev.txt"]
 
 ########################### FILE LIST, 17 ###########################
 

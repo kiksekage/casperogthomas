@@ -5,6 +5,8 @@ from reader import *
 from writer import *
 from feature_extractor import *
 
+#ar_stop_words = [(x.strip()) for x in open('arabic-stop-words.txt','r').read().split('\n')]
+
 def runner(model, language, year):
     if model == 'perceptron':
         train_files, test_files = filepath_returner("class", language, year)

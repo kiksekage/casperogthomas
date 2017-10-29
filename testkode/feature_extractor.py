@@ -7,7 +7,7 @@ from emoji import UNICODE_EMOJI
 import sys
 sys.path.append("../")
         
-def featureMerger(tweets, exclam=False, spelling=False, emoji=False, hashtag=False):
+def featureMerger(tweets, exclam=False, hashtag=False, spelling=False, emoji=False):
     width = exclam + spelling + emoji + hashtag# + neg_emoji + pos_emoji
     if (width==True):
         width = 1
@@ -105,10 +105,10 @@ def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range
     train_features = train_features.todense()
     test_features = test_features.todense()
 
-    train_custom_feat = featureMerger(train_tweets, emoji=True, exclam=True, hashtag=True, spelling=True)
+    train_custom_feat = featureMerger(train_tweets, exclam=True, hashtag=True, spelling=True, emoji=True)
     train_features = np.append(train_features, train_custom_feat, 1)
 
-    test_custom_feat = featureMerger(test_tweets, emoji=True, exclam=True, hashtag=True, spelling=True)
+    test_custom_feat = featureMerger(test_tweets, exclam=True, hashtag=True, spelling=True, emoji=True)
     test_features = np.append(test_features, test_custom_feat, 1)
     # print(train_features)
     # print(test_features)
