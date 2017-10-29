@@ -3,6 +3,8 @@ from writer import *
 from sklearn.feature_extraction.text import TfidfVectorizer
 import enchant
 from emoji import UNICODE_EMOJI
+#import nltk
+#nltk.download('averaged_perceptron_tagger')
 
 import sys
 sys.path.append("../")
@@ -28,6 +30,7 @@ def featureMerger(tweets, exclam=False, hashtag=False, spelling=False, emoji=Fal
             feat_list[i][width-pos] = 1
         if(hashtag):
             pos -= 1
+        #nltk.pos_tag(tweet)
         for word in words:
             if ((word.startswith(('#', '@')) or (word == '')) and (spelling)):
                 continue
