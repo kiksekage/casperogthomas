@@ -2,9 +2,9 @@
 
 ## How to run models:
 ```
-python3 [nearestCentroid/randomForests/perceptron].py [17/18/arabic] 
+python3 sem_eval.py [perceptron/nearest_centroid/random_forest] [en/es/ar] [17/18]
 ```
-With cwd being "testkode"
+With cwd being "testkode". NOTE: if models are run on 17 data, the models will be trained on english training and test data from 17. 
 
 ### How to run eval scripts:
 ```
