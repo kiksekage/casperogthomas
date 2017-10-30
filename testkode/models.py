@@ -18,12 +18,12 @@ def train_nearest_centroid(train_features, train_emotions):
 def train_random_forest(train_features, train_labels):
     random_forest = RandomForestRegressor(random_state=1, n_estimators=10)
     random_forest.fit(train_features, train_labels)
-    feat_importance = sorted(range(len(random_forest.feature_importances_)), key=lambda k: random_forest.feature_importances_[k])
-    print(feat_importance.index(len(feat_importance)-4))
-    print(feat_importance.index(len(feat_importance)-3))
-    print(feat_importance.index(len(feat_importance)-2))
-    print(feat_importance.index(len(feat_importance)-1))
-    print('\n')
+    #feat_importance = sorted(range(len(random_forest.feature_importances_)), key=lambda k: random_forest.feature_importances_[k])
+    #print(feat_importance.index(len(feat_importance)-4))
+    #print(feat_importance.index(len(feat_importance)-3))
+    #print(feat_importance.index(len(feat_importance)-2))
+    #print(feat_importance.index(len(feat_importance)-1))
+    #print('\n')
     return random_forest
 
 def predictor(model, test_features):
