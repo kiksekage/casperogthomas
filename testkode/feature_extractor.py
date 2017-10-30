@@ -2,50 +2,109 @@ from reader import *
 from writer import *
 from sklearn.feature_extraction.text import TfidfVectorizer
 import enchant
-from emoji import UNICODE_EMOJI
+#from emoji import UNICODE_EMOJI
+import emoji as Emoji
+
+neg_emoji_list = [':frowning_face:', ':slightly_frowning_face:', ':face_with_steam_from_nose:',':crying_face:',
+                  ':loudly_crying_face:',':weary_face:',':pouting_face:',':angry_face:', ':fearful_face:', ':grimacing_face:']
+pos_emoji_list = [':grinning_face:', ':grinning_face_with_smiling_eyes:', ':face_with_tears_of_joy:', ':grinning_face_with_sweat:',
+                  ':smiling_face_with_sunglasses:', ':smiling_face_with_heart_eyes:', ':hugging_face:', ':smiling_face:',
+                  ':face_blowing_a_kiss:', ':winking_face:'] 
 
 import sys
 sys.path.append("../")
         
-def featureMerger(tweets, exclam=False, spelling=False, emoji=False, hashtag=False):
-    width = exclam + spelling + emoji + hashtag# + neg_emoji + pos_emoji
-    if (width==True):
+def featureMerger(tweets, exclam=False, spelling=False, emoji=False, hashtag=False, pos_emoji=False, neg_emoji=False):
+    # Width defines the amount of columns in the custom feature matrix
+    width = exclam + spelling + emoji + hashtag + neg_emoji + pos_emoji
+    if (width==True): # If only 1 feature is set, manually set the width to 1
         width = 1
     feat_list = np.zeros((len(tweets), width))
 
     d = enchant.Dict('en_US')
     error_cntr = 0
     detected = False
+    pos_detected = False
+    neg_detected = False
 
     for i, tweet in enumerate(tweets):
-        pos = width
+        pos = width # To keep track of the current feature column to use, width is introduced
         words = tweet.split(" ")
-        if ('!' in tweet and (exclam)):
+
+        # Check whether or not the exclamation feature is set and do the check
+        if ((exclam) and '!' in tweet):
             feat_list[i][width-pos] = 1
+        # Keep track of the current feature column to use
         if (exclam):
             pos -= 1
-        if ('#' in tweet and (hashtag)):
+
+        # Check whether or not the hashtag feature is set and do the check
+        if ((hashtag) and '#' in tweet):
             feat_list[i][width-pos] = 1
+        # Keep track of the current feature column to use
         if(hashtag):
             pos -= 1
+
+        # Begin the word and character checking
         for word in words:
+
+            # Check whether or not the word starts with a mention or hashtag, and sort them out of the spellchecking
             if ((word.startswith(('#', '@')) or (word == '')) and (spelling)):
                 continue
             else:
-                if (not(d.check(word))):
+                #Check the spelling and increase error count
+                if ((spelling) and not(d.check(word))):
                     error_cntr+=1
-            if ((word in UNICODE_EMOJI) and not(detected) and (emoji)):
-                detected = True
+            
+            # Check every word for individual characters
+            for j in range(len(word)):
+                # Check whether or not a character is an emoji and whether or not the flags are set
+                if ((word[j] in Emoji.UNICODE_EMOJI) and ((not(detected) and (emoji)) or (neg_emoji) or (pos_emoji))):
+                    #print(word[j])
+                    # Flag set if emoji detected, will break the loop if only emoji feature is set
+                    detected = True
+
+                    # Demojize the emoji to make lookup possible
+                    demojized = Emoji.demojize(word[j])
+                    # Check whether or not the emoji is possitive or negative
+                    if (not(neg_detected) and (demojized in neg_emoji_list)):
+                        neg_detected = True
+                    if (not(pos_detected) and (demojized in pos_emoji_list)):
+                        pos_detected = True
+
+        # Check whether or not the amount of spelling mistakes are higher than given threshold
         if ((error_cntr/(len(words)) > 0.6) and (spelling)):
             feat_list[i][width-pos] = 1
+        # Keep track of the current feature column to use
         if(spelling):
             pos -= 1
+
+        # Check whether or not a negative emoji was found in tweet        
+        if ((neg_detected) and (neg_emoji)):
+            feat_list[i][width-pos] = 1
+        # Keep track of the current feature column to use
+        if (neg_emoji):
+            pos -= 1
+        
+        # Check whether or not a positive emoji was found in tweet        
+        if ((pos_detected) and (pos_emoji)):
+            feat_list[i][width-pos] = 1
+        # Keep track of the current feature column to use
+        if (pos_emoji):
+            pos -= 1
+            
+        # Check whether or not an emoji was found in tweet (OBS. no need to keep track of feature column on last feature)
         if ((detected) and (emoji)):
             feat_list[i][width-pos] = 1
+
+        # Reset flags for every tweet
+        detected = False
+        pos_detected = False
+        neg_detected = False
     return feat_list
 
 
-def extractFeatures(train, test, task, analyzer='word', max_features=500, ngram_range=(1, 3), stop_words='english'):
+def extractFeatures(train, test, task, analyzer='word', max_features=500, ngram_range=(1, 4), stop_words='english'):
     if task == 'class':
         test_tweets_list = []
         train_tweets_list = []
@@ -105,10 +164,10 @@ def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range
     train_features = train_features.todense()
     test_features = test_features.todense()
 
-    train_custom_feat = featureMerger(train_tweets, emoji=True, exclam=True, hashtag=True, spelling=True)
+    train_custom_feat = featureMerger(train_tweets, emoji=True, exclam=True, hashtag=True, spelling=True, pos_emoji=True, neg_emoji=True)
     train_features = np.append(train_features, train_custom_feat, 1)
 
-    test_custom_feat = featureMerger(test_tweets, emoji=True, exclam=True, hashtag=True, spelling=True)
+    test_custom_feat = featureMerger(test_tweets, emoji=True, exclam=True, hashtag=True, spelling=True,pos_emoji=True, neg_emoji=True)
     test_features = np.append(test_features, test_custom_feat, 1)
     # print(train_features)
     # print(test_features)
