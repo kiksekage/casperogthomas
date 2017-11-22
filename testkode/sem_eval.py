@@ -14,6 +14,7 @@ def runner(model, language, year):
         model_object = train_perceptron(train_features, train_emotions)
         preds = predictor(model_object, test_features)
         printPredsToFileClass(test_files, pred_file, preds)
+        #dils = sorted(range(len(model_object.coef_[0])), key=lambda k: model_object.coef_[0][k])
 
     elif model == 'nearest_centroid':
         train_files, test_files = filepath_returner("class", language, year)
