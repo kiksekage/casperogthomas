@@ -14,7 +14,7 @@ pos_emoji_list = [':grinning_face:', ':grinning_face_with_smiling_eyes:', ':face
 import sys
 sys.path.append("../")
         
-def featureMerger(tweets, exclam=False, spelling=False, emoji=False, hashtag=False, pos_emoji=False, neg_emoji=False):
+def featureMerger(tweets, exclam=False, hashtag=False, spelling=False, neg_emoji=False, pos_emoji=False, emoji=False):
     # Width defines the amount of columns in the custom feature matrix
     width = exclam + spelling + emoji + hashtag + neg_emoji + pos_emoji
     if (width==True): # If only 1 feature is set, manually set the width to 1
@@ -164,10 +164,10 @@ def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range
     train_features = train_features.todense()
     test_features = test_features.todense()
 
-    train_custom_feat = featureMerger(train_tweets, emoji=True, exclam=True, hashtag=True, spelling=True, pos_emoji=True, neg_emoji=True)
+    train_custom_feat = featureMerger(train_tweets, exclam=True, hashtag=True, spelling=True, neg_emoji=True, pos_emoji=True, emoji=True)
     train_features = np.append(train_features, train_custom_feat, 1)
 
-    test_custom_feat = featureMerger(test_tweets, emoji=True, exclam=True, hashtag=True, spelling=True,pos_emoji=True, neg_emoji=True)
+    test_custom_feat = featureMerger(test_tweets, exclam=True, hashtag=True, spelling=True, neg_emoji=True, pos_emoji=True, emoji=True)
     test_features = np.append(test_features, test_custom_feat, 1)
     # print(train_features)
     # print(test_features)
