@@ -115,7 +115,6 @@ def extractFeatures(train, test, dev, task, max_features, ngram_range, stop_word
 
         test_labels_list = []
         train_labels_list = []
-
         for file in test:
             test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(file, task=task)
             test_tweets_list.extend(test_tweets)

@@ -27,8 +27,8 @@ def train_random_forest(train_features, train_labels):
     return random_forest
 
 def train_random_forest_class(train_features, train_labels):
-    random_forest = RandomForestClassifier()
-    random_forest.fit(train_features, train_labels)
+    random_forest_class = RandomForestClassifier()
+    random_forest_class.fit(train_features, train_labels)
     return random_forest_class
 
 def predictor(model, test_features):

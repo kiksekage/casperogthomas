@@ -36,11 +36,12 @@ def runner(model):
             preds = predictor(model_object, test_features[i])    
             printPredsToFileReg(args.test[i], pred_fold + pred_dict[i], preds)
             #print((sorted(range(len(model_object.feature_importances_)), key=lambda k: model_object.feature_importances_[k])).index(501))
+    
     elif args.model == 'random_forest_class':
         train_features, train_labels, test_features, test_labels = extractFeatures(args.train, args.test, args.dev, task, args.max_features, ngram_range)
         model_object = train_random_forest_class(train_features, train_labels)
         preds = predictor(model_object, test_features)
-        printPredsToFileClass(test_files, pred_file, preds)
+        printPredsToFileClass(args.test[0], pred_file, preds)
 
 
 if __name__ == '__main__':
