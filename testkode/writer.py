@@ -1,4 +1,3 @@
-import io
 import subprocess
 import sys
 import numpy as np
@@ -7,7 +6,7 @@ def printPredsToFileClass(infile, outfile, res, infileenc="utf-8", skip=0):
     outf = open(outfile, 'w')
     cntr = 0
     for file in infile:
-        for line in io.open(file, encoding=infileenc, mode='r'):
+        for line in open(file, encoding=infileenc, mode='r'):
             if skip > 0:
                 skip -= 1
             else:
@@ -24,15 +23,13 @@ def printPredsToFileClass(infile, outfile, res, infileenc="utf-8", skip=0):
                 cntr += 1
     outf.close()
 
-def printPredsToFileReg(infile, outfile, res, infileenc="utf-8", skip=0):
+def printPredsToFileReg(infile, outfile, res, infileenc="utf-8"):
     outf = open(outfile, 'w', encoding=infileenc)
     cntr = 0
-    for line in io.open(infile, encoding=infileenc, mode='r'):
-        if skip > 0:
-            skip -= 1
-        else:
+    with open(infile, encoding=infileenc, mode='r') as f:
+        outf.write(f.readline())
+        for line in f:        
             outl = line.strip("\n").split("\t")
             outl[3] = str(res[cntr])
             outf.write("\t".join(outl) + '\n')
             cntr += 1
-    outf.close()
