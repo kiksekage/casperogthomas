@@ -54,7 +54,8 @@ def calculate_reg(gold, preds):
 
     return pearson, pearson_high
 
-def calculate_class(gold, preds):
+def calculate_class(preds, gold):
+    import ipdb; ipdb.set_trace()
     micro_accuracy = []
 
     actual_emotion_micro = [0]*12
@@ -98,8 +99,16 @@ def calculate_class(gold, preds):
     macro_accuracy = sum(micro_accuracy)/len(gold)
 
     for i in range(12):
-        p_micro[i] = correct_emotion_micro[i]/assigned_emotion_micro[i]
-        r_micro[i] = correct_emotion_micro[i]/actual_emotion_micro[i]
+        try:
+            p_micro[i] = correct_emotion_micro[i]/assigned_emotion_micro[i]
+        except ZeroDivisionError:
+            p_micro[i] = 0
+        
+        try:
+            r_micro[i] = correct_emotion_micro[i]/actual_emotion_micro[i]
+        except ZeroDivisionError:
+            r_micro[i] = 0
+
         try:
             f_micro[i] = 2*p_micro[i]*r_micro[i]/(p_micro[i]+r_micro[i])
         except ZeroDivisionError:
@@ -108,7 +117,10 @@ def calculate_class(gold, preds):
 
     p_macro = sum(correct_emotion_micro)/sum(assigned_emotion_micro)
     r_macro = sum(correct_emotion_micro)/sum(actual_emotion_micro)
-    avg_f_macro = 2*p_macro*r_macro/(p_macro+r_macro)
+    try:
+        avg_f_macro = 2*p_macro*r_macro/(p_macro+r_macro)
+    except ZeroDivisionError:
+        avg_f_macro = 0
     
     return macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro
     
@@ -138,7 +150,7 @@ def evaluate(train_preds, train_labels, dev_preds, dev_labels, test_preds, test_
         
     else:
         print('Sanity check:')
-        macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(train_labels, train_preds)
+        macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(train_preds, train_labels)
         print("Global accuracy for train tweets: {0}".format(macro_accuracy))
         print("F-micro for emotion classes:")
         print(f_micro)
@@ -146,7 +158,7 @@ def evaluate(train_preds, train_labels, dev_preds, dev_labels, test_preds, test_
         print()
 
         print('Accuracy for dev set:')
-        macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(dev_labels, train_preds)
+        macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(dev_preds, dev_labels)
         print("Global accuracy for dev tweets: {0}".format(macro_accuracy))
         print("F-micro for emotion classes:")
         print(f_micro)
@@ -154,7 +166,7 @@ def evaluate(train_preds, train_labels, dev_preds, dev_labels, test_preds, test_
         print()
 
         print('Accuracy for test set:')
-        macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(test_labels, train_preds)
+        macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(test_preds, test_labels)
         print("Global accuracy for test tweets: {0}".format(macro_accuracy))
         print("F-micro for emotion classes:")
         print(f_micro)
