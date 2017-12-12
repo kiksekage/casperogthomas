@@ -115,24 +115,25 @@ def extractFeatures(train, test, dev, task, max_features, ngram_range, stop_word
 
         test_labels_list = []
         train_labels_list = []
+
         for file in test:
             test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(file, task=task)
             test_tweets_list.extend(test_tweets)
-            test_labels_list.extend(test_labels)
+            test_labels_list.extend(np.asarray(test_labels))
 
         for file in dev: 
             dev_tweets, dev_emotion, dev_labels, dev_ids = readTweetsOfficial(file, task=task)
             dev_tweets_list.extend(dev_tweets)
-            dev_labels_list.extend(dev_labels)
+            dev_labels_list.extend(np.asarray(dev_labels))
 
         for file in train:
             train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(file, task=task)
             train_tweets_list.extend(train_tweets)
-            train_labels_list.extend(train_labels)
+            train_labels_list.extend(np.asarray(train_labels))
 
-        train_features, test_features, vocab = featTransform(train_tweets_list, test_tweets_list, analyzer=analyzer, max_features=max_features, ngram_range=ngram_range, stop_words=stop_words)
+        train_features, test_features, dev_features, vocab = featTransform(train_tweets_list, test_tweets_list, dev_tweets_list, analyzer=analyzer, max_features=max_features, ngram_range=ngram_range, stop_words=stop_words)
         
-        return train_features, train_labels_list, test_features, test_labels_list
+        return train_features, train_labels_list, test_features, test_labels_list, dev_features, dev_labels_list
     
     elif task == 'reg':
         test_tweets_list = []
@@ -146,45 +147,54 @@ def extractFeatures(train, test, dev, task, max_features, ngram_range, stop_word
 
         test_features_list = []
         train_features_list = []
+        dev_features_list = []
 
         for file in test:
             test_tweets, test_emotion, test_labels, test_ids = readTweetsOfficial(file, task=task)
             test_tweets_list.append(test_tweets)
-            test_labels_list.append(test_labels)
+            test_labels_list.append(np.asarray(test_labels))
 
         for file in train:
             train_tweets, train_emotion, train_labels, train_ids = readTweetsOfficial(file, task=task)
             train_tweets_list.append(train_tweets)
-            train_labels_list.append(train_labels)
+            train_labels_list.append(np.asarray(train_labels))
 
         for file in dev: 
             dev_tweets, dev_emotion, dev_labels, dev_ids = readTweetsOfficial(file, task=task)
             dev_tweets_list.append(dev_tweets)
-            dev_labels_list.append(dev_labels)
+            dev_labels_list.append(np.asarray(dev_labels))
         
         for i in range(4):
-            train_features, test_features, vocab = featTransform(train_tweets_list[i], test_tweets_list[i], analyzer=analyzer, max_features=max_features, ngram_range=ngram_range, stop_words=stop_words)
+            train_features, test_features, dev_features, vocab = featTransform(train_tweets_list[i], test_tweets_list[i], dev_tweets_list[i], analyzer=analyzer, max_features=max_features, ngram_range=ngram_range, stop_words=stop_words)
             test_features_list.append(test_features)
             train_features_list.append(train_features)
+            dev_features_list.append(dev_features)
 
-        return train_features_list, train_labels_list, test_features_list, test_labels_list
+        return train_features_list, train_labels_list, test_features_list, test_labels_list, dev_features_list, dev_labels_list
 
 
-def featTransform(train_tweets, test_tweets, analyzer, max_features, ngram_range, stop_words):
+def featTransform(train_tweets, test_tweets, dev_tweets, analyzer, max_features, ngram_range, stop_words):
     # max_features=100, ngram_range=(1, 4), stop_words='english'
     TfidfV = TfidfVectorizer(analyzer=analyzer, max_features=max_features, ngram_range=ngram_range, stop_words=stop_words)
     TfidfV.fit(train_tweets)
     # print(TfidfV.vocabulary_)            
     train_features = TfidfV.transform(train_tweets)
     test_features = TfidfV.transform(test_tweets)
+    dev_features = TfidfV.transform(dev_tweets)
+
     train_features = train_features.todense()
     test_features = test_features.todense()
+    dev_features = dev_features.todense()
 
     train_custom_feat = featureMerger(train_tweets, exclam=args.exclam, hashtag=args.hashtag, spelling=args.spelling, neg_emoji=args.neg_emoji, pos_emoji=args.pos_emoji, emoji=args.emoji)
     train_features = np.append(train_features, train_custom_feat, 1)
 
     test_custom_feat = featureMerger(test_tweets, exclam=args.exclam, hashtag=args.hashtag, spelling=args.spelling, neg_emoji=args.neg_emoji, pos_emoji=args.pos_emoji, emoji=args.emoji)
     test_features = np.append(test_features, test_custom_feat, 1)
+
+    dev_custom_feat = featureMerger(dev_tweets, exclam=args.exclam, hashtag=args.hashtag, spelling=args.spelling, neg_emoji=args.neg_emoji, pos_emoji=args.pos_emoji, emoji=args.emoji)
+    dev_features = np.append(dev_features, test_custom_feat, 1)
+
     # print(train_features)
     # print(test_features)
-    return train_features, test_features, TfidfV.vocabulary_
+    return train_features, test_features, dev_features, TfidfV.vocabulary_

@@ -1,3 +1,5 @@
 python3 sem_eval.py --train data/2018-EI-reg-En-anger-train.txt data/2018-EI-reg-En-fear-train.txt data/2018-EI-reg-En-joy-train.txt data/2018-EI-reg-En-sadness-train.txt --test data/2018-EI-reg-En-anger-dev.txt data/2018-EI-reg-En-fear-dev.txt data/2018-EI-reg-En-joy-dev.txt data/2018-EI-reg-En-sadness-dev.txt --dev data/2018-EI-reg-En-anger-dev.txt data/2018-EI-reg-En-fear-dev.txt data/2018-EI-reg-En-joy-dev.txt data/2018-EI-reg-En-sadness-dev.txt --model random_forest --max_features 1000 --ngrams 1 4
 
-python3 sem_eval.py --train data/2018-E-c-En-train.txt --test data/2018-E-c-En-dev.txt --dev data/2018-E-c-En-dev.txt --model random_forest --max_features 1000 --ngrams 1 4
+python3 sem_eval.py --train data/2018-E-c-En-train.txt --test data/2018-E-c-En-dev.txt --dev data/2018-E-c-En-dev.txt --model random_forest_class --max_features 1000 --ngrams 1 4
+
+--exclam --hashtag --spelling --neg_emoji --pos_emoji --emoji
