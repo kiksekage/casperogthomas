@@ -8,10 +8,10 @@ from eval import *
 
 #ar_stop_words = [(x.strip()) for x in open('arabic-stop-words.txt','r').read().split('\n')]
 
-if args.model == 'random_forest_class':
-    task = 'class'
-else:
+if args.model == 'random_forest':
     task = 'reg'
+else:
+    task = 'class'
 
 ngram_range = (args.ngrams[0], args.ngrams[1])
 

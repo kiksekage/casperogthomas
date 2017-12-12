@@ -40,7 +40,7 @@ def train_random_forest_class(train_features, train_labels):
     print("spelling " + str(feat_importance.index(1002)))
     print("pos_emoji " + str(feat_importance.index(1003)))
     print("neg_emoji " + str(feat_importance.index(1004)))
-    print("emojo " + str(feat_importance.index(1005)))
+    print("emoji " + str(feat_importance.index(1005)))
     '''
     return random_forest_class
 
