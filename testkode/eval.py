@@ -52,10 +52,9 @@ def calculate_reg(gold, preds):
 
     pearson_high = pearsonr(gold_high, pred_high)[0]
 
-    return pearson, pearson_high
+    return np.round(pearson, decimals=3), np.round(pearson_high, decimals=3)
 
 def calculate_class(preds, gold):
-    import ipdb; ipdb.set_trace()
     micro_accuracy = []
 
     actual_emotion_micro = [0]*12
@@ -113,6 +112,11 @@ def calculate_class(preds, gold):
             f_micro[i] = 2*p_micro[i]*r_micro[i]/(p_micro[i]+r_micro[i])
         except ZeroDivisionError:
             f_micro[i] = 0
+    
+    p_micro = np.round(p_micro, decimals=3)
+    r_micro = np.round(r_micro, decimals=3)
+    f_micro = np.round(f_micro, decimals=3)
+
     avg_f_micro = sum(f_micro)/len(f_micro)
 
     p_macro = sum(correct_emotion_micro)/sum(assigned_emotion_micro)
@@ -121,6 +125,9 @@ def calculate_class(preds, gold):
         avg_f_macro = 2*p_macro*r_macro/(p_macro+r_macro)
     except ZeroDivisionError:
         avg_f_macro = 0
+    
+    avg_f_macro = round(avg_f_macro, 3)
+    avg_f_micro = round(avg_f_micro, 3)
     
     return macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro
     
