@@ -62,6 +62,6 @@ if __name__ == '__main__':
     #python3 sem_treval.py model language year
     train_preds, train_labels, dev_preds, dev_labels, test_preds, test_labels = runner(args.model)
 
-    evaluate(train_preds, train_labels, dev_preds, dev_labels, test_preds, test_labels)
+    print(evaluate(train_preds, train_labels, dev_preds, dev_labels, test_preds, test_labels))
 
     #evaluate()
