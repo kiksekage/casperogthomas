@@ -3,42 +3,7 @@ import numpy as np
 
 emdict = {'anger' : 0, 'fear' : 1, 'joy' : 2, 'sadness' : 3}
 revdict = {0 : 'anger', 1 : 'fear', 2 : 'joy', 3 : 'sadness'}
-'''
-hit = [0,0,0,0] #anger, fear, joy, sadness
-emotion_guess = [0,0,0,0] #anger, fear, joy, sadness
-emotion_count = [0,0,0,0] #anger, fear, joy, sadness
-precision = [0,0,0,0]
-recall = [0,0,0,0]
-f_score = [0,0,0,0]
-avg = 0
 
-#print(emdict['anger'])
-
-with open(infile, 'r', encoding='utf-8') as f:
-    for line in f:
-        line = line.strip('\n').split('\t')
-        emotion_count[emdict[line[2]]] += 1
-        emotion_guess[emdict[line[3]]] += 1
-        if emdict[line[2]] == emdict[line[3]]:
-            hit[emdict[line[2]]] += 1
-
-for i in range(4):
-    precision[i] = hit[i]/emotion_guess[i]
-
-for i in range(4):
-    recall[i] = hit[i]/emotion_count[i]
-
-for i in range(4):
-    f_score[i] = (2*precision[i]*recall[i])/(precision[i]+recall[i])
-
-for i in range(4):
-    print("{!s} values:".format(revdict[i]))
-    print("Precision : {!s}, recall : {!s}, f-score : {!s}".format(precision[i], recall[i], f_score[i]))
-
-for score in f_score:
-    avg += score
-print("Macro f-score : {!s}".format(avg/len(f_score)))
-'''
 def calculate_reg(gold, preds):
     pearson = pearsonr(gold, preds)[0]
 
@@ -55,6 +20,10 @@ def calculate_reg(gold, preds):
     return np.round(pearson, decimals=3), np.round(pearson_high, decimals=3)
 
 def calculate_class(preds, gold):
+    for i, augmented in enumerate(gold):
+        if sum(augmented) < 0:
+            gold = np.delete(gold, i, axis=0)
+            preds = np.delete(preds, i, axis=0)
     micro_accuracy = []
 
     actual_emotion_micro = [0]*12
@@ -133,49 +102,57 @@ def calculate_class(preds, gold):
     
 
 def evaluate(train_preds, train_labels, dev_preds, dev_labels, test_preds, test_labels):
+    helper_string = ''
     if len(train_preds) == 4:
-        print('Sanity check:')
+        helper_string += ('Sanity check:\n')
+        pearson_avg_train = []
         for i, gold in enumerate(train_labels):
             pearson, pearson_high = calculate_reg(gold, train_preds[i])
-            print("Pearson for train tweets, {0}: {1}".format(revdict[i], pearson))
-            print("Pearson for > 0.5 train tweets, {0}: {1}".format(revdict[i], pearson_high))
-        print()
+            helper_string += ("Pearson for train tweets, {0}: {1}\n".format(revdict[i], pearson))
+            helper_string += ("Pearson for > 0.5 train tweets, {0}: {1}\n".format(revdict[i], pearson_high))
+            pearson_avg_train.append(pearson)
+        helper_string += ("Average Pearson for train tweets: {0:.3f}\n".format(sum(pearson_avg_train)/len(pearson_avg_train)))
 
-        print('Pearson for dev set:')
+        helper_string += ('Pearson for dev set:\n')
+        pearson_avg_dev = []
         for i, gold in enumerate(dev_labels):
             pearson, pearson_high = calculate_reg(gold, dev_preds[i])
-            print("Pearson for dev tweets, {0}: {1}".format(revdict[i], pearson))
-            print("Pearson for > 0.5 dev tweets, {0}: {1}".format(revdict[i], pearson_high))
-        print()
+            helper_string += ("Pearson for dev tweets, {0}: {1}\n".format(revdict[i], pearson))
+            helper_string += ("Pearson for > 0.5 dev tweets, {0}: {1}\n".format(revdict[i], pearson_high))
+            pearson_avg_dev.append(pearson)
+        helper_string += ("Average Pearson for dev tweets: {0:.3f}\n".format(sum(pearson_avg_dev)/len(pearson_avg_dev)))
 
-        print('Pearson for test set:')
+        helper_string += ('Pearson for test set:\n')
+        pearson_avg_test = []
         for i, gold in enumerate(test_labels):
             pearson, pearson_high = calculate_reg(gold, test_preds[i])
-            print("Pearson for test tweets, {0}: {1}".format(revdict[i], pearson))
-            print("Pearson for > 0.5 test tweets, {0}: {1}".format(revdict[i], pearson_high))
-        print()
+            helper_string += ("Pearson for test tweets, {0}: {1}\n".format(revdict[i], pearson))
+            helper_string += ("Pearson for > 0.5 test tweets, {0}: {1}\n".format(revdict[i], pearson_high))
+            pearson_avg_test.append(pearson)
+        helper_string += ("Average Pearson for test tweets: {0:.3f}\n".format(sum(pearson_avg_test)/len(pearson_avg_test)))
         
     else:
-        print('Sanity check:')
+        helper_string += ('Sanity check:\n')
         macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(train_preds, train_labels)
-        print("Global accuracy for train tweets: {0}".format(macro_accuracy))
-        print("F-micro for emotion classes:")
-        print(f_micro)
-        print("and averaged: " + str(avg_f_micro))
-        print()
+        helper_string += ("Global accuracy for train tweets: {0:.3f}\n".format(macro_accuracy))
+        helper_string += ("F-micro for emotion classes:\n")
+        helper_string += str(f_micro)
+        helper_string += '\n'
+        helper_string += ("and averaged: " + str(avg_f_micro)+'\n')
 
-        print('Accuracy for dev set:')
+        helper_string += ('Accuracy for dev set:\n')
         macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(dev_preds, dev_labels)
-        print("Global accuracy for dev tweets: {0}".format(macro_accuracy))
-        print("F-micro for emotion classes:")
-        print(f_micro)
-        print("and averaged: " + str(avg_f_micro))
-        print()
+        helper_string += ("Global accuracy for dev tweets: {0:.3f}\n".format(macro_accuracy))
+        helper_string += ("F-micro for emotion classes:\n")
+        helper_string += str(f_micro)
+        helper_string += '\n'
+        helper_string += ("and averaged: " + str(avg_f_micro)+'\n')
 
-        print('Accuracy for test set:')
+        helper_string += ('Accuracy for test set:\n')
         macro_accuracy, p_micro, r_micro, f_micro, avg_f_micro, p_macro, r_macro, avg_f_macro = calculate_class(test_preds, test_labels)
-        print("Global accuracy for test tweets: {0}".format(macro_accuracy))
-        print("F-micro for emotion classes:")
-        print(f_micro)
-        print("and averaged: " + str(avg_f_micro))
-        print()
+        helper_string += ("Global accuracy for test tweets: {0:.3f}\n".format(macro_accuracy))
+        helper_string += ("F-micro for emotion classes:\n")
+        helper_string += str(f_micro)
+        helper_string += '\n'
+        helper_string += ("and averaged: " + str(avg_f_micro)+'\n')
+    return helper_string
