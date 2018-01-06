@@ -42,7 +42,7 @@ def runner(model):
             dev_preds.append(np.asarray(predictor(model_object, dev_features[i])))
             test_preds.append(np.asarray(predictor(model_object, test_features[i])))
 
-            #printPredsToFileReg(args.test[i], pred_fold + pred_dict[i], preds)
+            printPredsToFileReg(args.test[i], pred_fold + pred_dict[i], test_preds[i])
             #print((sorted(range(len(model_object.feature_importances_)), key=lambda k: model_object.feature_importances_[k])).index(501))
     
     elif args.model == 'random_forest_class':
@@ -61,13 +61,13 @@ def runner(model):
 if __name__ == '__main__':
     #python3 sem_treval.py model language year
     train_preds, train_labels, dev_preds, dev_labels, test_preds, test_labels = runner(args.model)
-    pred = np.asarray([])
+    '''pred = np.asarray([])
     gold = np.asarray([])
     for emo in range(len(train_labels)):
         pred = np.append(pred,test_preds[emo])
         gold = np.append(gold, test_labels[emo])
     final = np.c_[gold, pred]
-    np.savetxt('statpreds.txt', final, fmt='%.3f %.3f')
+    np.savetxt('statpreds.txt', final, fmt='%.3f %.3f')'''
     print(evaluate(train_preds, train_labels, dev_preds, dev_labels, test_preds, test_labels))
 
     #evaluate()

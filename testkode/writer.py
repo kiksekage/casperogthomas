@@ -29,9 +29,13 @@ def printPredsToFileClass(infile, outfile, res, infileenc="utf-8", skip=0):
 
 def printPredsToFileReg(infile, outfile, res, infileenc="utf-8"):
     outf = open(outfile, 'w', encoding=infileenc)
+    sent_ids = []
     with open(infile, encoding=infileenc, mode='r') as f:
         outf.write(f.readline())
-        for i, line in f:        
+        for i, line in enumerate(f):
             outl = line.strip("\n").split("\t")
-            outl[3] = str(res[i])
+            outl[3] = str(round(res[i],3))
             outf.write("\t".join(outl) + '\n')
+            sent_ids.append(outl[0])
+    outf.close()
+    #return sent_ids
