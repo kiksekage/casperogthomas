@@ -20,12 +20,15 @@ def train_nearest_centroid(train_features, train_emotions):
 def train_random_forest(train_features, train_labels):
     random_forest = RandomForestRegressor(random_state=random_state, n_estimators=2000)
     random_forest.fit(train_features, train_labels)
-    '''
-    feat_importance = sorted(range(len(random_forest.feature_importances_)), key=lambda k: random_forest.feature_importances_[k])
-    print(feat_importance.index(len(feat_importance)-4))
-    print(feat_importance.index(len(feat_importance)-3))
-    print(feat_importance.index(len(feat_importance)-2))
-    print(feat_importance.index(len(feat_importance)-1))
+    
+    '''feat_importance = sorted(range(len(random_forest.feature_importances_)), key=lambda k: random_forest.feature_importances_[k])
+    print("exclam: " + str(feat_importance.index(1000)))
+    print("hashtag: " + str(feat_importance.index(1001)))
+    print("spelling: " + str(feat_importance.index(1002)))
+    print("neg_emoji: " + str(feat_importance.index(1003)))
+    print("pos_emoji: " + str(feat_importance.index(1004)))
+    print("emoji: " + str(feat_importance.index(1005)))
+
     print('\n')
     '''
     return random_forest
