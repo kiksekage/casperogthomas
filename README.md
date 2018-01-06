@@ -2,13 +2,7 @@
 
 ## How to run models:
 ```
-python3 sem_eval.py [perceptron/nearest_centroid/random_forest] [en/es/ar] [17/18]
-```
-With cwd being "testkode". NOTE: if models are run on 17 data, the models will be trained on english training and test data from 17. 
-
-### How to run eval scripts:
-```
-./eval.sh [reg/class]
+python3 sem_eval.py --train data/2018-E-c-En-train.txt --dev data/2018-E-c-En-dev.txt --test data/2018-E-c-En-test.txt --model random_forest_class --ngrams 1 5 --max_features 1000 --pos_emoj --neg_emoji --emoji --exclam --hashtag --spelling
 ```
 With cwd being "testkode"
-NOTE: [EmoInt](https://github.com/felipebravom/EmoInt) in the folder outside of the repository is needed to run the eval shell script. Furthermore, the arabic test results in regression can not be evaluated locally.
+

@@ -48,6 +48,10 @@ def readTweetsOfficial(tweetfile, encoding='utf-8', task='class'):
             emotions.append('NONE')
             tweets.append(sentence)
             ids.append(sent_id)
-            labels.append([float(x) for x in label_temp])
+            
+            if label_temp[0] == 'NONE':
+                labels.append([x for x in label_temp])
+            else:
+                labels.append([float(x) for x in label_temp])
 
     return tweets,emotions,labels,ids

@@ -177,7 +177,7 @@ def featTransform(train_tweets, test_tweets, dev_tweets, analyzer, max_features,
     # max_features=100, ngram_range=(1, 4), stop_words='english'
     TfidfV = TfidfVectorizer(analyzer=analyzer, max_features=max_features, ngram_range=ngram_range, stop_words=stop_words)
     TfidfV.fit(train_tweets)
-    # print(TfidfV.vocabulary_)            
+    # print(TfidfV.vocabulary_)
     train_features = TfidfV.transform(train_tweets)
     test_features = TfidfV.transform(test_tweets)
     dev_features = TfidfV.transform(dev_tweets)
@@ -193,7 +193,7 @@ def featTransform(train_tweets, test_tweets, dev_tweets, analyzer, max_features,
     test_features = np.append(test_features, test_custom_feat, 1)
 
     dev_custom_feat = featureMerger(dev_tweets, exclam=args.exclam, hashtag=args.hashtag, spelling=args.spelling, neg_emoji=args.neg_emoji, pos_emoji=args.pos_emoji, emoji=args.emoji)
-    dev_features = np.append(dev_features, test_custom_feat, 1)
+    dev_features = np.append(dev_features, dev_custom_feat, 1)
 
     # print(train_features)
     # print(test_features)
